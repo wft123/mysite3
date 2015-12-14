@@ -3,17 +3,15 @@ package com.hanains.mysite.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hanains.mysite.service.BoardService;
 import com.hanains.mysite.vo.BoardVo;
-import com.hanains.mysite.vo.UserVo;
 
 @Controller
 @RequestMapping("/board")
@@ -24,11 +22,7 @@ public class BoardController {
 	
 	@RequestMapping("/list")
 	public String list(Model model,@RequestParam(value="pg", required=false) String pg, @RequestParam(value="kwd", required=false) String kwd){
-		int page =1;
-		if(pg != null) page = Integer.parseInt(pg);
-		model.addAttribute("list",service.getListPage(page,kwd));
-		model.addAttribute("boardSize", service.getBoardSize(kwd));
-		model.addAttribute("pageSize", service.getPageSize());
+		model = service.list(model,pg,kwd);
 		return "/board/list";
 	}
 	
@@ -42,12 +36,6 @@ public class BoardController {
 	@RequestMapping("/writeform")
 	public String writeform(){
 		return "/board/writeform";
-	}
-	
-	@RequestMapping("/write")
-	public String write(@ModelAttribute BoardVo vo, HttpSession session){
-		service.write(vo,session);
-		return "redirect:/board/list?pg=1";
 	}
 	
 	@RequestMapping("/delete")
@@ -75,8 +63,27 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/reply")
-	public String reply(@ModelAttribute BoardVo vo, HttpSession session){
-		service.reply(vo,session);
+	public String reply(@ModelAttribute BoardVo vo){
+		service.reply(vo);
+		return "redirect:/board/list?pg=1";
+	}
+	
+	@RequestMapping("/write")
+	public String write(@ModelAttribute BoardVo vo){
+		service.write(vo);
+		return "redirect:/board/list?pg=1";
+	}
+	
+	
+	@RequestMapping("/upload")
+	public String upload(@ModelAttribute BoardVo vo,@RequestParam( "file" ) MultipartFile file, HttpSession session){
+		service.upload(vo,file,session);
+		return "redirect:/board/list?pg=1";
+	}
+	
+	@RequestMapping("/replyupload")
+	public String replyupload(@ModelAttribute BoardVo vo, @RequestParam( "file" ) MultipartFile file, HttpSession session){
+		service.replyupload(vo,file,session);
 		return "redirect:/board/list?pg=1";
 	}
 }

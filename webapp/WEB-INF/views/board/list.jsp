@@ -17,8 +17,8 @@
 		<c:import url="/WEB-INF/views/include/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="${pageContext.request.contextPath}/board/list" method="post">
-					<input type="hidden" name="pg" value="${param.pg }">
+				<form id="search_form" action="${pageContext.request.contextPath}/board/list" method="get">
+					<input type="hidden" name="pg" value="1">
 					<input type="text" id="kwd" name="kwd" value="">
 					<input type="submit" value="찾기">
 				</form>
@@ -36,7 +36,7 @@
 					<tr>
 						<td>${boardSize-(status.index+((param.pg-1)*pageSize)) }</td>
 						<td class="title-td"><a href="${pageContext.request.contextPath}/board/view?no=${vo.no }">
-							<c:if test="${vo.order_no>1 }">
+							<c:if test="${vo.depth>0 }">
 								<c:forEach begin="1" end="${vo.depth }">
 									&nbsp;
 								</c:forEach>

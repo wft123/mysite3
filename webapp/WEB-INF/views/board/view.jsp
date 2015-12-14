@@ -31,6 +31,12 @@
 							</div>
 						</td>
 					</tr>
+					<tr>
+							<td class="label">파일</td>
+							<td>
+								<img src="${pageContext.request.contextPath }/upload/${vo.fileName}" width=150px>
+							</td> 
+						</tr>
 				</table>
 				<div class="bottom">
 					<c:if test="${not empty authUser }">

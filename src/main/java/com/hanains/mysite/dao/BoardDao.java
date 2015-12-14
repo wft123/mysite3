@@ -27,7 +27,7 @@ public class BoardDao {
 		Connection con = dbconnect.getConnection();
 		PreparedStatement pstmt = null;
 		
-		String sql ="insert into board values ( board_no_seq.nextval, ?, ?, ?, 0, SYSDATE, ?, ?, ? )";
+		String sql ="insert into board values ( board_no_seq.nextval, ?, ?, ?, 0, SYSDATE, ?, ?, ?, ? )";
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, vo.getTitle());
@@ -36,6 +36,7 @@ public class BoardDao {
 			pstmt.setLong(4, vo.getGroup_no());
 			pstmt.setLong(5, vo.getOrder_no());
 			pstmt.setLong(6, vo.getDepth());
+			pstmt.setString(7, vo.getFileName());
 			
 			pstmt.execute();
 		} catch (SQLException e) {
@@ -52,7 +53,7 @@ public class BoardDao {
 		ResultSet rs = null;
 		BoardVo vo = null;
 		
-		String sql = "select no, title, content, member_no, group_no, order_no, depth from board where no="+no;
+		String sql = "select no, title, content, member_no, group_no, order_no, depth, fileName from board where no="+no;
 		try {
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
@@ -65,6 +66,7 @@ public class BoardDao {
 				vo.setGroup_no(rs.getLong(5));
 				vo.setOrder_no(rs.getLong(6));
 				vo.setDepth(rs.getLong(7));
+				vo.setFileName(rs.getString(8));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -189,7 +191,7 @@ public class BoardDao {
 		return 0;
 	}
 	
-	public int getMaxGroup(){
+	public long getMaxGroup(){
 		Connection con = dbconnect.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -198,55 +200,55 @@ public class BoardDao {
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
-				return rs.getInt(1);
+				return rs.getLong(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally{
 			DBClose.close(con,pstmt,rs);
 		}
-		return 0;
+		return 0L;
 	}
 	
-	public int getMaxOrder(long group_no){
+	public long getMaxOrder(long group_no){
 		Connection con = dbconnect.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "select max(group_no) from board where group_no=?";
+		String sql = "select max(order_no) from board where group_no=?";
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setLong(1, group_no);
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
-				return rs.getInt(1);
+				return rs.getLong(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally{
 			DBClose.close(con,pstmt,rs);
 		}
-		return 0;
+		return 0L;
 	}
 	
-	public int getMaxDepth(long group_no, long order_no){
+	public long getMaxDepth(long group_no, long order_no){
 		Connection con = dbconnect.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "select max(group_no) from board where group_no=? and order_no=?";
+		String sql = "select max(depth) from board where group_no=? and order_no=?";
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setLong(1, group_no);
 			pstmt.setLong(2, order_no);
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
-				return rs.getInt(1);
+				return rs.getLong(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally{
 			DBClose.close(con,pstmt,rs);
 		}
-		return 0;
+		return 0L;
 	}
 	
 	public List<BoardVo> getListPage(int pageNo, String kwd){
@@ -274,7 +276,7 @@ public class BoardDao {
 		sql.append("				 from board a, member b");
 		sql.append("				where a.member_no = b.no ");
 		sql.append("				AND title like ? ");
-		sql.append("				order by group_no desc, order_no asc)");
+		sql.append("				order by group_no desc, order_no asc, depth asc)");
 		sql.append("				) pagetable");
 		sql.append("			where rnum <= ?");
 		sql.append("		)");

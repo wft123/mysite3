@@ -12,7 +12,8 @@
 		<c:import url="/WEB-INF/views/include/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/reply">
+				<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/replyupload" enctype="multipart/form-data">
+					<input type="hidden" name="member_no" value="${authUser.no }">
 					<input type = "hidden" name = "group_no" value="${vo.group_no }">
 					<input type = "hidden" name = "order_no" value="${vo.order_no }">
 					<input type = "hidden" name = "depth" value="${vo.depth }">
@@ -29,6 +30,12 @@
 							<td>
 								<textarea id="content" name="content"></textarea>
 							</td>
+						</tr>
+						<tr>
+							<td class="label">파일</td>
+							<td>
+								<input type="file" name="file">
+							</td> 
 						</tr>
 					</table>
 					<div class="bottom">
