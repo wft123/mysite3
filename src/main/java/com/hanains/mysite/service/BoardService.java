@@ -20,12 +20,12 @@ public class BoardService {
 	@Autowired
 	private BoardDao dao;
 
-	public Model list(Model model, String pg, String kwd) {
+	public Model list(Model model, String pg, String kwd, String searchType) {
 		int page = 1;
 		if (pg != null)
 			page = Integer.parseInt(pg);
-		model.addAttribute("list", dao.getListPage(page, kwd));
-		model.addAttribute("boardSize", dao.getBoardSize(kwd));
+		model.addAttribute("list", dao.getListPage(page, kwd, searchType));
+		model.addAttribute("boardSize", dao.getBoardSize(kwd, searchType));
 		model.addAttribute("pageSize", dao.PAGE_ROW);
 
 		return model;
@@ -47,34 +47,17 @@ public class BoardService {
 		dao.modify(vo);
 	}
 
-	public void write(BoardVo vo) {
-		vo.setGroup_no(dao.getMaxGroup() + 1);
-		vo.setOrder_no(1);
-		vo.setDepth(0);
-		dao.insert(vo);
-	}
-
-	public void reply(BoardVo vo) {
-		if (vo.getOrder_no() == 1)
-			vo.setOrder_no(dao.getMaxOrder(vo.getGroup_no()) + 1);
-		vo.setDepth(vo.getDepth() + 1);
-		dao.insert(vo);
-	}
-
-	public void upload(BoardVo vo, MultipartFile file1,HttpSession session) {
+	public void write(BoardVo vo, MultipartFile file1,HttpSession session) {
+		if(vo.getGroup_no()==0){
+			vo.setGroup_no(dao.getMaxGroup() + 1);
+			vo.setOrder_no(1);
+			vo.setDepth(0);
+		} else {
+			if (vo.getOrder_no() == 1)
+				vo.setOrder_no(dao.getMaxOrder(vo.getGroup_no()) + 1);
+			vo.setDepth(vo.getDepth() + 1);
+		}
 		String fileName = fileSave(file1, session);
-		vo.setGroup_no(dao.getMaxGroup() + 1);
-		vo.setOrder_no(1);
-		vo.setDepth(0);
-		vo.setFileName(fileName);
-		dao.insert(vo);
-	}
-
-	public void replyupload(BoardVo vo, MultipartFile file1,HttpSession session) {
-		String fileName = fileSave(file1,session);
-		if (vo.getOrder_no() == 1)
-			vo.setOrder_no(dao.getMaxOrder(vo.getGroup_no()) + 1);
-		vo.setDepth(vo.getDepth() + 1);
 		vo.setFileName(fileName);
 		dao.insert(vo);
 	}

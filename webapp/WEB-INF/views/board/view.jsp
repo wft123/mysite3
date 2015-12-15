@@ -40,14 +40,14 @@
 				</table>
 				<div class="bottom">
 					<c:if test="${not empty authUser }">
-						<form action="${pageContext.request.contextPath}/board/replyform" method="post">
+						<form action="${pageContext.request.contextPath}/board/writeform" method="post">
 							<input type="hidden" name="group_no" value="${vo.group_no }">
 							<input type="hidden" name="order_no" value="${vo.order_no }">
 							<input type="hidden" name="depth" value="${vo.depth }">
 							<input type="submit" value="답글">
 						</form>
 					</c:if>
-					<a href="${pageContext.request.contextPath}/board/list?pg=1">글목록</a>
+					<a href="${pageContext.request.contextPath}/board/?pg=1">글목록</a>
 					<a href="${pageContext.request.contextPath}/board/modifyform?no=${vo.no }">글수정</a>
 				</div>
 			</div>

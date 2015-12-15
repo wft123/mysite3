@@ -17,8 +17,12 @@
 		<c:import url="/WEB-INF/views/include/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="${pageContext.request.contextPath}/board/list" method="get">
+				<form id="search_form" action="${pageContext.request.contextPath}/board/" method="get">
 					<input type="hidden" name="pg" value="1">
+					<select name="searchType">
+						<option value="title">제목+내용</option>
+						<option value="user">글쓴이</option>
+					</select>
 					<input type="text" id="kwd" name="kwd" value="">
 					<input type="submit" value="찾기">
 				</form>
@@ -38,7 +42,7 @@
 						<td class="title-td"><a href="${pageContext.request.contextPath}/board/view?no=${vo.no }">
 							<c:if test="${vo.depth>0 }">
 								<c:forEach begin="1" end="${vo.depth }">
-									&nbsp;
+									&nbsp;&nbsp;
 								</c:forEach>
 								<img src="${pageContext.request.contextPath}/assets/images/ico-reply.gif">
 							</c:if>
@@ -60,13 +64,13 @@
 				<div class="pager">
 					<ul>
 						<c:if test="${param.pg > 1 }"> <c:set var="prev" value="${param.pg-1 }"/>	</c:if>
-						<li class="pg-prev"><a href="${pageContext.request.contextPath}/board/list?pg=${prev }">◀ 이전</a></li>
+						<li class="pg-prev"><a href="${pageContext.request.contextPath}/board/?pg=${prev }">◀ 이전</a></li>
 						<c:forEach begin="1" end="${pages+(1-(pages%1))%1}" varStatus="status">
-							<li><a href="${pageContext.request.contextPath}/board/list?pg=${status.index }">${status.index }</a></li>
+							<li><a href="${pageContext.request.contextPath}/board/?pg=${status.index }">${status.index }</a></li>
 							<c:set var="next" value="${status.index }"/>
 						</c:forEach>
 						<c:if test="${param.pg < next }"> <c:set var="next" value="${param.pg+1 }"/>	</c:if>
-						<li class="pg-next"><a href="${pageContext.request.contextPath}/board/list?pg=${next }">다음 ▶</a></li>
+						<li class="pg-next"><a href="${pageContext.request.contextPath}/board/?pg=${next }">다음 ▶</a></li>
 					</ul>	
 				</div>
 				<div class="bottom">

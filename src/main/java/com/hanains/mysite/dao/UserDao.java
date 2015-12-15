@@ -5,128 +5,45 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.hanains.http.util.DBConnect;
 import com.hanains.mysite.exception.RepositoryException;
 import com.hanains.mysite.vo.UserVo;
+
+import oracle.jdbc.pool.OracleDataSource;
 
 @Repository
 public class UserDao {
 	
-	private Connection getConnection() throws SQLException {
-		Connection connection = new DBConnect().getConnection();
-		return connection;
-	}
+	@Autowired
+	private OracleDataSource oracleDataSource;
 	
-	public UserVo get( String email, String password ) throws RepositoryException {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		UserVo vo = null;
-		
-		try{
-			//1. get Connection
-			conn = getConnection();
-			
-			//2. prepare statement
-			String sql = 
-				" select no, name, email" +
-				"   from member" +
-				"  where email=?"+
-				"    and password=?";
-			pstmt = conn.prepareStatement( sql );
-			
-			//3. binding
-			pstmt.setString( 1, email );
-			pstmt.setString( 2, password );
-			
-			//4. execute SQL
-			rs = pstmt.executeQuery();
-			if( rs.next() ) {
-				Long no = rs.getLong( 1 );
-				String name = rs.getString( 2 );
-				String email2 = rs.getString( 3 );
-				
-				vo = new UserVo();
-				vo.setNo(no);
-				vo.setName(name);
-				vo.setEmail(email2);
-			}
-			
-		} catch( SQLException ex ) {
-			System.out.println( "SQL Error:" + ex );
-			throw new RepositoryException(ex.toString());
-		} finally {
-			//5. clear resources
-			try{
-				if( rs != null ) {
-					rs.close();
-				}
-				if( pstmt != null ) {
-					pstmt.close();
-				}
-				if( conn != null ) {
-					conn.close();
-				}
-			} catch( SQLException ex ) {
-				ex.printStackTrace();
-			}
-		}
-		
-		return vo;
+	@Autowired
+	private SqlSession sqlSession;
+	
+	public UserVo get( UserVo vo ) throws RepositoryException {
+		UserVo userVo = sqlSession.selectOne("user.getByEmailAndPassword",vo);
+		return userVo;
 	}
 
 	public void insert( UserVo vo ) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		
-		try {
-			//1. DB Connection
-			conn = getConnection();
-			
-			//2. prepare statment
-			String sql = 
-				" insert" +
-				" into member" +
-				" values ( member_no_seq.nextval, ?, ?, ?, ? )";
-			pstmt = conn.prepareStatement( sql );
-			
-			//3. binding
-			pstmt.setString( 1, vo.getName() );
-			pstmt.setString( 2, vo.getEmail() );
-			pstmt.setString( 3, vo.getPassword() );
-			pstmt.setString( 4, vo.getGender() );
-			
-			//4. execute SQL
-			pstmt.executeUpdate();
-			
-		} catch( SQLException ex ) {
-			System.out.println( "sql error:" + ex );
-			ex.printStackTrace();
-		} finally {
-			//5. clear resources
-			try{
-				if( pstmt != null ) {
-					pstmt.close();
-				}
-				if( conn != null ) {
-					conn.close();
-				}
-			} catch( SQLException ex ) {
-				ex.printStackTrace();
-			}
-		}
+		sqlSession.insert("user.insert",vo);
 	}
 	
-	public boolean idCheck(String email){
+	public UserVo get( Long no ){
+		UserVo vo = sqlSession.selectOne("user.getByNo",no);
+		return vo;
+	}
+	
+	public boolean idCheck( String email ){
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try{
 			//1. get Connection
-			conn = getConnection();
+			conn = oracleDataSource.getConnection();
 			
 			//2. prepare statement
 			String sql = 

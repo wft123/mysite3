@@ -23,6 +23,6 @@ public class GuestBookService {
 	}
 
 	public void delete(GuestBookVo vo) {
-		dao.delete(vo.getNo(),vo.getPassword());
+		dao.delete(vo);
 	}
 }

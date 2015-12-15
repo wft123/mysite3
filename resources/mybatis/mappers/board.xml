@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+
+	<insert id="insert" parameterType="boardVo">
+		<![CDATA[
+			insert into board 
+			values ( board_no_seq.nextval, #{title }, #{content }, #{member_no }, 
+						0, SYSDATE, #{group_no }, #{order_no }, #{depth }, #{fileName } )
+		]]>
+	</insert>
+	
+	<select id="getView" parameterType="long" resultType="BoardVo">
+		<![CDATA[
+			select no, title, content, member_no, group_no, order_no, depth, fileName 
+			from board where no=#{no }
+		]]>
+	</select>
+	
+	<update id="upViewCount" parameterType="long">
+		<![CDATA[
+			update board set view_cnt = view_cnt + 1 where no=#{no }
+		]]>
+	</update>
+	
+	<update id="modify" parameterType="BoardVo">
+		<![CDATA[
+			update board set title=#{title }, content=#{content } 
+			where no=#{no }
+		]]>
+	</update>
+	
+	<delete id="delete" parameterType="long">
+		<![CDATA[
+			delete from board where no = #{no }
+		]]>
+	</delete>
+	
+	<select id="getBoardSize" parameterType="string" resultType="int">
+		<![CDATA[
+			select count(*) from board 
+				where title like #{kwd } or content like #{kwd }
+		]]>
+	</select>
+	
+	<select id="getMaxGroup" resultType="long">
+		<![CDATA[
+			select max(group_no) from board
+		]]>
+	</select>
+	
+	<select id="getMaxOrder" parameterType="long" resultType="long">
+		<![CDATA[
+			select max(order_no) from board where group_no=#{no }
+		]]>
+	</select>
+	
+	<select id="getListPage" parameterType="map" resultType="BoardVo">
+		<![CDATA[
+			select no, title, member_no, member_name,view_cnt, reg_date, group_no, order_no, depth
+			from (SELECT *
+					FROM ( SELECT rownum rnum, no, title, member_no, member_name,view_cnt, reg_date, group_no, order_no, depth
+							   FROM ( select a.no no, 
+							   					a.title title,
+							   					a.content as content,
+							   					a.member_no member_no,
+							   					 b.name as member_name,
+							   					 a.view_cnt view_cnt,
+							   					 to_char(a.reg_date, 'yyyy-mm-dd hh24:mi:ss') as reg_date,
+							   					 a.group_no group_no,
+							   					 a.order_no order_no,
+							   					 a.depth depth
+							   				from board a, member b
+							   				where a.member_no = b.no 
+							   				order by group_no desc, order_no asc, depth asc)
+							   	where title like #{kwd } or content like #{kwd }
+							   	) pagetable
+					where rnum <= #{end })
+			where rnum >= #{start }
+		]]>
+	</select>
+
+</mapper>

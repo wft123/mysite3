@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -41,14 +42,17 @@ public class UserController {
 	@RequestMapping("/login")
 	public String login(HttpSession session, @ModelAttribute UserVo vo){
 		UserVo authUser = userService.login(vo);
+		if(authUser==null) return "redirect:/user/loginform";
 		session.setAttribute("authUser", authUser);
 		return "redirect:/";
 	}
 	
 	@RequestMapping("/logout")
-	public String logout(HttpSession session){
+	public String logout(HttpSession session, Model model){
 		session.removeAttribute("authUser");
 		session.invalidate();
-		return "redirect:/";
+		model.addAttribute("msg", "로그아웃 되었습니다.");
+		model.addAttribute("url","/mysite3/");
+		return "/util/alert";
 	}
 }

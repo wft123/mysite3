@@ -12,9 +12,12 @@
 		<c:import url="/WEB-INF/views/include/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/upload"  enctype="multipart/form-data">
+				<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/write"  enctype="multipart/form-data">
 		 		<!--<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/write">  -->
 		 			<input type="hidden" name="member_no" value="${authUser.no }">
+					<input type = "hidden" name = "group_no" value="${vo.group_no }">
+					<input type = "hidden" name = "order_no" value="${vo.order_no }">
+					<input type = "hidden" name = "depth" value="${vo.depth }">
 					<table class="tbl-ex">
 						<tr>
 							<th colspan="2">글쓰기</th>
@@ -37,7 +40,7 @@
 						</tr>
 					</table>
 					<div class="bottom">
-						<a href="${pageContext.request.contextPath}/board/list?pg=1">취소</a>
+						<a href="${pageContext.request.contextPath}/board/?pg=1">취소</a>
 						<input type="submit" value="등록">
 					</div>
 				</form>				
