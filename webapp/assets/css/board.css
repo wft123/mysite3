@@ -73,17 +73,18 @@ input#kwd	{
 .board-form .tbl-ex td.label {
 	text-align:right;
 	font-weight:bold;
-	width:60px; 
+	width:50px; 
 }
 
 .board-form .tbl-ex input[ name='title' ] {
-	width: 480px;
+	width: 410px;
 }
 
 .board-form .tbl-ex textarea {
-	width: 470px;
+	width: 410px;
 	height: 200px;
-	padding: 10px;
+	padding-right:10px;
+	margin-left: 10px;
 	resize: none;
 	outline: none;	
 }
