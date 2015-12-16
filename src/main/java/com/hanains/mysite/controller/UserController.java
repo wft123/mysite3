@@ -57,10 +57,11 @@ public class UserController {
 		return "/user/loginform";
 	}
 	
+	
 	@RequestMapping("/login")
-	public String login(HttpSession session, @ModelAttribute UserVo vo){
+	public String login(Model model, HttpSession session, @ModelAttribute UserVo vo){
 		UserVo authUser = userService.login(vo);
-		if(authUser==null) return "redirect:/user/loginform";
+		if(authUser == null) return "redirect:/user/loginform?result=fail";
 		session.setAttribute("authUser", authUser);
 		return "redirect:/";
 	}
