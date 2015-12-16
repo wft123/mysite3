@@ -12,7 +12,6 @@ import com.hanains.mysite.vo.BoardVo;
 
 @Repository
 public class BoardDao {
-	static public final int PAGE_ROW = 10;
 	
 	@Autowired
 	private SqlSession sqlSession;
@@ -41,9 +40,11 @@ public class BoardDao {
 		sqlSession.delete("board.delete",no);
 	}
 
-	public int getBoardSize(String kwd, String searchType){
-		if(kwd!=null) return sqlSession.selectOne("board.getBoardSize", "%"+kwd+"%");
-		else return sqlSession.selectOne("board.getBoardSize", "%");
+	public long getBoardSize(String kwd, String searchType){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("kwd", kwd);
+		map.put("searchType", searchType);
+		return sqlSession.selectOne("board.getBoardSize",map);
 	}
 	
 	public long getMaxGroup(){
@@ -54,12 +55,12 @@ public class BoardDao {
 		return sqlSession.selectOne("board.getMaxOrder", group_no);
 	}
 	
-	public List<BoardVo> getListPage(int pageNo, String kwd, String searchType){
+	public List<BoardVo> getListPage(long pageNo, String kwd, String searchType, int pageSize){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(kwd!=null) map.put("kwd", "%"+kwd+"%");
-		else map.put("kwd", "%");
-		map.put("start", 1+(pageNo-1)*PAGE_ROW);
-		map.put("end", pageNo*PAGE_ROW);
+		map.put("kwd", kwd);
+		map.put("searchType", searchType);
+		map.put("start", 1+(pageNo-1)*pageSize);
+		map.put("end", pageNo*pageSize);
 		
 		List<BoardVo> list = sqlSession.selectList("board.getListPage",map);
 		return list;

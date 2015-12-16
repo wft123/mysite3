@@ -1,5 +1,7 @@
 package com.hanains.mysite.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,10 @@ public class BoardController {
 	private BoardService service;
 	
 	@RequestMapping("/")
-	public String list(Model model,@RequestParam(value="pg", required=false) String pg, @RequestParam(value="kwd", required=false) String kwd,
+	public String list(Model model,@RequestParam(value="pg", required=true, defaultValue="1") long pg, @RequestParam(value="kwd", required=true, defaultValue="") String kwd,
 			@RequestParam(value="searchType", required=false) String searchType ){
-		model = service.list(model,pg,kwd,searchType);
+		Map<String, Object> data = service.list(pg,kwd,searchType);
+		model.addAttribute("data", data);
 		return "/board/list";
 	}
 	
@@ -37,7 +40,7 @@ public class BoardController {
 	@RequestMapping("/delete")
 	public String delete(@RequestParam("no") long no){
 		service.delete(no);
-		return "redirect:/board/?pg=1";
+		return "redirect:/board/";
 	}
 	
 	@RequestMapping("/modifyform")
@@ -49,7 +52,7 @@ public class BoardController {
 	@RequestMapping("/modify")
 	public String modify(@ModelAttribute BoardVo vo){
 		service.modify(vo);
-		return "redirect:/board/?pg=1";
+		return "redirect:/board/";
 	}
 
 	@RequestMapping("/writeform")
@@ -61,7 +64,7 @@ public class BoardController {
 	@RequestMapping("/write")
 	public String write(@ModelAttribute BoardVo vo,@RequestParam( "file" ) MultipartFile file, HttpSession session){
 		service.write(vo,file,session);
-		return "redirect:/board/?pg=1";
+		return "redirect:/board/";
 	}
 
 }

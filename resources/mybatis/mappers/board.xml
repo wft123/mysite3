@@ -37,22 +37,34 @@
 		]]>
 	</delete>
 	
-	<select id="getBoardSize" parameterType="string" resultType="int">
+	<select id="getBoardSize" parameterType="map" resultType="long">
 		<![CDATA[
-			select count(*) from board 
-				where title like #{kwd } or content like #{kwd }
-		]]>
+			select count(*) from board
+		]]>	
+			<if test="kwd != ''">
+				<if test="searchType == 'title'">
+				 	<![CDATA[
+			  	 		where title like '%${kwd }%' or content like '%${kwd }%'
+			  	 	]]>
+				</if>
+				<if test="searchType == 'user'">
+			 	 	<![CDATA[
+			 	 		 ,member         
+  						where board.member_no=member.no AND member.NAME like '%${kwd }%'
+			  	 	]]>
+				</if>
+			</if> 
 	</select>
 	
 	<select id="getMaxGroup" resultType="long">
 		<![CDATA[
-			select max(group_no) from board
+			select nvl(max(group_no),1) from board
 		]]>
 	</select>
 	
 	<select id="getMaxOrder" parameterType="long" resultType="long">
 		<![CDATA[
-			select max(order_no) from board where group_no=#{no }
+			select nvl(max(order_no),1) from board where group_no=#{no }
 		]]>
 	</select>
 	
@@ -74,7 +86,20 @@
 							   				from board a, member b
 							   				where a.member_no = b.no 
 							   				order by group_no desc, order_no asc, depth asc)
-							   	where title like #{kwd } or content like #{kwd }
+							   	]]>			
+							   	<if test="kwd != ''">
+							   		<if test="searchType == 'title'">
+								 	 	<![CDATA[
+								  	 		where title like '%${kwd }%' or content like '%${kwd }%'
+								  	 	]]>
+							   		</if>
+							   		<if test="searchType == 'user'">
+								 	 	<![CDATA[
+								  	 		where member_name like '%${kwd }%'
+								  	 	]]>
+							   		</if>
+							   	</if>
+							   	<![CDATA[
 							   	) pagetable
 					where rnum <= #{end })
 			where rnum >= #{start }

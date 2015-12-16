@@ -3,12 +3,13 @@ package com.hanains.mysite.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hanains.mysite.dao.BoardDao;
@@ -16,19 +17,36 @@ import com.hanains.mysite.vo.BoardVo;
 
 @Service
 public class BoardService {
-
+	static public final int PAGE_SIZE = 8;
+	static public final int BLOCK_SIZE = 5;
+	
 	@Autowired
 	private BoardDao dao;
 
-	public Model list(Model model, String pg, String kwd, String searchType) {
-		int page = 1;
-		if (pg != null)
-			page = Integer.parseInt(pg);
-		model.addAttribute("list", dao.getListPage(page, kwd, searchType));
-		model.addAttribute("boardSize", dao.getBoardSize(kwd, searchType));
-		model.addAttribute("pageSize", dao.PAGE_ROW);
+	public Map<String, Object> list(long page, String kwd, String searchType) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		long boardSize = dao.getBoardSize(kwd, searchType);
+		long startIndex = boardSize - ((page-1)*PAGE_SIZE);
+		long totalPageSize = (long)Math.ceil((double)boardSize/PAGE_SIZE);
+		long curruntBlock = (long)((int)(page-1)/BLOCK_SIZE)+1;
+		long startPageNo = 1+((curruntBlock-1)*BLOCK_SIZE);
+		long prevPage = 1+((curruntBlock-2)*BLOCK_SIZE);
+		long nextPage = 1+((curruntBlock)*BLOCK_SIZE);
+		
+		map.put("pg",page);
+		map.put("kwd",kwd);
+		map.put("searchType",searchType);
+		map.put("startIndex",startIndex);
+		map.put("startPageNo",startPageNo);
+		map.put("prevPage",prevPage >= 1 ? prevPage : page );
+		map.put("nextPage",nextPage<=totalPageSize ? nextPage : page );
+		map.put("blockSize",BLOCK_SIZE);
+		map.put("list", dao.getListPage(page, kwd, searchType,PAGE_SIZE));
+		map.put("boardSize", dao.getBoardSize(kwd, searchType));
+		map.put("totalPageSize", totalPageSize);
 
-		return model;
+		return map;
 	}
 
 	public BoardVo getView(long no) {
@@ -58,6 +76,7 @@ public class BoardService {
 			vo.setDepth(vo.getDepth() + 1);
 		}
 		String fileName = fileSave(file1, session);
+//		String url = "/upload-files" + fileName;
 		vo.setFileName(fileName);
 		dao.insert(vo);
 	}
@@ -66,7 +85,8 @@ public class BoardService {
 		
 		if (!file1.isEmpty()) {
 			String root = session.getServletContext().getRealPath("/");
-			String path = root+"\\upload";
+//			String path = root+"\\upload";
+			String path = "\\temp\\";
 			File dir = new File(path);
 			if(!dir.isDirectory()) dir.mkdirs();
 			

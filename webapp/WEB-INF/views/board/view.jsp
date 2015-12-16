@@ -34,7 +34,7 @@
 					<tr>
 							<td class="label">파일</td>
 							<td>
-								<img src="${pageContext.request.contextPath }/upload/${vo.fileName}" width=150px>
+								<img src="${pageContext.request.contextPath }/upload-files/${vo.fileName}" width=150px>
 							</td> 
 						</tr>
 				</table>
@@ -47,8 +47,10 @@
 							<input type="submit" value="답글">
 						</form>
 					</c:if>
-					<a href="${pageContext.request.contextPath}/board/?pg=1">글목록</a>
-					<a href="${pageContext.request.contextPath}/board/modifyform?no=${vo.no }">글수정</a>
+					<a href="${pageContext.request.contextPath}/board/">글목록</a>
+					<c:if test="${vo.member_no==authUser.no }">
+						<a href="${pageContext.request.contextPath}/board/modifyform?no=${vo.no }">글수정</a>
+					</c:if>
 				</div>
 			</div>
 		</div>

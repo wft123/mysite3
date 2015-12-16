@@ -5,7 +5,7 @@
 
 	<select id="getByEmailAndPassword" resultType="UserVo" parameterType="UserVo">
 		<![CDATA[
-			select no, name, email
+			select no, name, email, gender
 				from member
 			where email=#{email}
 				and password=#{password}
@@ -14,9 +14,17 @@
 	
 	<select id="getByNo" resultType="UserVo" parameterType="long">
 		<![CDATA[
-			select no, name, email
+			select no, name, email, gender
 				from member
 			where no=#{no }
+		]]>
+	</select>
+	
+	<select id="getByEmail" resultType="UserVo" parameterType="string">
+		<![CDATA[
+			select no, name, email, gender
+				from member
+			where email=#{email }
 		]]>
 	</select>
 	

@@ -6,6 +6,48 @@
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <link href="${pageContext.request.contextPath}/assets/css/user.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.9.0.js"></script>
+<script>
+$(function(){
+	$("#email").change(function(){
+		$("#btn-check").show();
+		$("#image-checked").hide();
+	});
+	
+	
+	$( "#btn-check" ).click( function(){
+		var email = $("#email").val();
+		if(email=="") return;
+		
+		$.ajax({
+			url: "${pageContext.request.contextPath}/user/checkEmail",
+			type: "get",
+			dataType:"json",
+			data: "email="+email,
+			//contentType: "application/json",
+			success:function( response ){
+				if(response.result =="fail"){
+					console.error(response.message);
+					return;
+				}
+				
+				if(response.data ==false){
+					alert("이미 사용중인 이메일입니다.");
+					$("#email").val("");
+					$("#email").focus();
+					return;
+				}
+				
+				$("#btn-check").hide();
+				$("#image-checked").show();
+			},
+			error: function(jqXHR, status, error ){
+				console.error( status + ":" + error);
+			}
+		});
+	});
+});
+</script>
 </head>
 <body>
 	<div id="container">
@@ -19,7 +61,8 @@
 
 					<label class="block-label" for="email">이메일</label>
 					<input id="email" name="email" type="text" value="">
-					<input type="button" value="id 중복체크" >
+					<img id="image-checked" src="${pageContext.request.contextPath}/assets/images/checked.png" style="width:12px; display:none;">
+					<input type="button" id="btn-check" value="id 중복체크" >
 					
 					<label class="block-label">패스워드</label>
 					<input name="password" type="password" value="">

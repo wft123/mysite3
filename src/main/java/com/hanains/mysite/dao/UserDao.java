@@ -27,50 +27,18 @@ public class UserDao {
 		UserVo userVo = sqlSession.selectOne("user.getByEmailAndPassword",vo);
 		return userVo;
 	}
-
-	public void insert( UserVo vo ) {
-		sqlSession.insert("user.insert",vo);
-	}
 	
 	public UserVo get( Long no ){
 		UserVo vo = sqlSession.selectOne("user.getByNo",no);
 		return vo;
 	}
 	
-	public boolean idCheck( String email ){
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try{
-			//1. get Connection
-			conn = oracleDataSource.getConnection();
-			
-			//2. prepare statement
-			String sql = 
-				" select no, name, email" +
-				"   from member" +
-				"  where email=?";
-			pstmt = conn.prepareStatement( sql );
-			
-			//3. binding
-			pstmt.setString( 1, email );
-			
-			//4. execute SQL
-			rs = pstmt.executeQuery();
-			if( rs.next() ) return true;
-			
-		} catch( SQLException ex ) {
-			System.out.println( "SQL Error:" + ex );
-		} finally {
-			//5. clear resources
-			try{
-				if( rs != null ) rs.close();
-				if( pstmt != null ) pstmt.close();
-				if( conn != null ) conn.close();
-			} catch( SQLException ex ) {
-				ex.printStackTrace();
-			}
-		}
-		return false;
+	public UserVo get( String email ){
+		UserVo vo = sqlSession.selectOne("user.getByEmail",email);
+		return vo;
+	}
+
+	public void insert( UserVo vo ) {
+		sqlSession.insert("user.insert",vo);
 	}
 }
