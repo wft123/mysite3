@@ -6,8 +6,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +15,7 @@ import com.hanains.mysite.vo.BoardVo;
 
 @Service
 public class BoardService {
-	static public final int PAGE_SIZE = 8;
+	static public final int PAGE_SIZE = 5;
 	static public final int BLOCK_SIZE = 5;
 	
 	@Autowired
@@ -65,7 +63,7 @@ public class BoardService {
 		dao.modify(vo);
 	}
 
-	public void write(BoardVo vo, MultipartFile file1,HttpSession session) {
+	public void write(BoardVo vo, MultipartFile file1) {
 		if(vo.getGroup_no()==0){
 			vo.setGroup_no(dao.getMaxGroup() + 1);
 			vo.setOrder_no(1);
@@ -75,17 +73,15 @@ public class BoardService {
 				vo.setOrder_no(dao.getMaxOrder(vo.getGroup_no()) + 1);
 			vo.setDepth(vo.getDepth() + 1);
 		}
-		String fileName = fileSave(file1, session);
+		String fileName = fileSave(file1);
 //		String url = "/upload-files" + fileName;
 		vo.setFileName(fileName);
 		dao.insert(vo);
 	}
 
-	private String fileSave(MultipartFile file1,HttpSession session) {
+	private String fileSave(MultipartFile file1) {
 		
 		if (!file1.isEmpty()) {
-			String root = session.getServletContext().getRealPath("/");
-//			String path = root+"\\upload";
 			String path = "\\temp\\";
 			File dir = new File(path);
 			if(!dir.isDirectory()) dir.mkdirs();

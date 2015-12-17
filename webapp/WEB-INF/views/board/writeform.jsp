@@ -35,7 +35,7 @@
 						<tr>
 							<td class="label">파일</td>
 							<td>
-								<input type="file" name="file" >
+								<input type="file" name="file"   accept="image/*">
 							</td> 
 						</tr>
 					</table>

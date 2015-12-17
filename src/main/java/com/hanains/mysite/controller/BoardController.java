@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hanains.mysite.annotation.Auth;
+import com.hanains.mysite.annotation.AuthUser;
 import com.hanains.mysite.service.BoardService;
 import com.hanains.mysite.vo.BoardVo;
+import com.hanains.mysite.vo.UserVo;
 
 @Controller
 @RequestMapping("/board")
@@ -31,39 +34,44 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/view")
-	public String view(Model model, @RequestParam("no") long no){
+	public String view(Model model, @RequestParam("no") long no, @AuthUser UserVo authUser){
 		service.upCount(no);
 		model.addAttribute("vo", service.getView(no));
 		return "/board/view";
 	}
 	
+	@Auth
 	@RequestMapping("/delete")
 	public String delete(@RequestParam("no") long no){
 		service.delete(no);
 		return "redirect:/board/";
 	}
 	
+	@Auth
 	@RequestMapping("/modifyform")
 	public String modifyform(Model model, @RequestParam("no") long no){
 		model.addAttribute("vo", service.getView(no));
 		return "/board/modifyform";
 	}
 	
+	@Auth
 	@RequestMapping("/modify")
 	public String modify(@ModelAttribute BoardVo vo){
 		service.modify(vo);
 		return "redirect:/board/";
 	}
 
+	@Auth
 	@RequestMapping("/writeform")
 	public String writeform(Model model, @ModelAttribute BoardVo vo){
 		model.addAttribute("vo", vo);
 		return "/board/writeform";
 	}
 	
+	@Auth
 	@RequestMapping("/write")
-	public String write(@ModelAttribute BoardVo vo,@RequestParam( "file" ) MultipartFile file, HttpSession session){
-		service.write(vo,file,session);
+	public String write(@ModelAttribute BoardVo vo,@RequestParam( "file" ) MultipartFile file){
+		service.write(vo,file);
 		return "redirect:/board/";
 	}
 

@@ -56,22 +56,4 @@ public class UserController {
 	public String loginform(){
 		return "/user/loginform";
 	}
-	
-	
-	@RequestMapping("/login")
-	public String login(Model model, HttpSession session, @ModelAttribute UserVo vo){
-		UserVo authUser = userService.login(vo);
-		if(authUser == null) return "redirect:/user/loginform?result=fail";
-		session.setAttribute("authUser", authUser);
-		return "redirect:/";
-	}
-	
-	@RequestMapping("/logout")
-	public String logout(HttpSession session, Model model){
-		session.removeAttribute("authUser");
-		session.invalidate();
-		model.addAttribute("msg", "로그아웃 되었습니다.");
-		model.addAttribute("url","/mysite3/");
-		return "/util/alert";
-	}
 }

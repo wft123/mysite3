@@ -3,6 +3,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>mysite</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link href="${pageContext.request.contextPath}/assets/css/board.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.9.0.js"></script>
+<script>
+$(function(){
+	$(".no${data.pg}").css('color' , 'red');
+});
+</script>
 <style type="text/css">
 .title-td {
 	text-align:left;
@@ -13,9 +22,6 @@
 	height: 27px;
 }
 </style>
-<title>mysite</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="${pageContext.request.contextPath}/assets/css/board.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div id="container">
@@ -63,16 +69,19 @@
 					</tr>
 					</c:forEach>
 				</table>
-				<c:set var="prev" value="1"/>
 				<div class="pager">
 					<ul>
+						<c:if test="${data.prevPage!=data.pg }">
 						<li class="pg-prev"><a href="${pageContext.request.contextPath}/board/?pg=${data.prevPage }&kwd=${data.kwd }&searchType=${data.searchType }">◀ 이전</a></li>
+						</c:if>
 						<c:forEach begin="0" end="${data.blockSize-1}" varStatus="status">
 							<c:if test="${data.startPageNo+status.index <= data.totalPageSize }">
-								<li><a href="${pageContext.request.contextPath}/board/?pg=${data.startPageNo+status.index }&kwd=${data.kwd }&searchType=${data.searchType }">${data.startPageNo+status.index }</a></li>
+								<li><a class="no${data.startPageNo+status.index }" href="${pageContext.request.contextPath}/board/?pg=${data.startPageNo+status.index }&kwd=${data.kwd }&searchType=${data.searchType }">${data.startPageNo+status.index }</a></li>
 							</c:if>						
 						</c:forEach>
+						<c:if test="${data.nextPage!=data.pg }">
 						<li class="pg-next"><a href="${pageContext.request.contextPath}/board/?pg=${data.nextPage }&kwd=${data.kwd }&searchType=${data.searchType }">다음 ▶</a></li>
+						</c:if>
 					</ul>	
 				</div>
 				<div class="bottom">
