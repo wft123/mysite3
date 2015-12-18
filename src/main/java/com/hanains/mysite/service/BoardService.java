@@ -73,14 +73,14 @@ public class BoardService {
 				vo.setOrder_no(dao.getMaxOrder(vo.getGroup_no()) + 1);
 			vo.setDepth(vo.getDepth() + 1);
 		}
-		String fileName = fileSave(file1);
-//		String url = "/upload-files" + fileName;
-		vo.setFileName(fileName);
+		String[] fileInfo = fileSave(file1);
+		vo.setFileOriginalName(fileInfo[0]);
+		vo.setFileName( fileInfo[1]);
 		dao.insert(vo);
 	}
 
-	private String fileSave(MultipartFile file1) {
-		
+	private String[] fileSave(MultipartFile file1) {
+		String[] fileInfo = new String[2];
 		if (!file1.isEmpty()) {
 			String path = "\\temp\\";
 			File dir = new File(path);
@@ -93,7 +93,7 @@ public class BoardService {
 			Long size = file1.getSize();
 
 			String saveFileName = genSaveFileName(extName);
-			String url = "/product-images/" + saveFileName;
+			String url = "/upload-files/" + saveFileName;
 
 			System.out.println(" ######## fileOriginalName : " + fileOriginalName);
 			System.out.println(" ######## fileName : " + fileName);
@@ -103,7 +103,10 @@ public class BoardService {
 			System.out.println(" ######## url : " + url);
 
 			writeFile(file1, path, saveFileName);
-			return saveFileName;
+			fileInfo[0] = fileOriginalName;
+			fileInfo[1] = url;
+			
+			return fileInfo;
 		}
 		return null;
 	}

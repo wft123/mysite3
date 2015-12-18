@@ -7,13 +7,13 @@
 		<![CDATA[
 			insert into board 
 			values ( board_no_seq.nextval, #{title }, #{content }, #{member_no }, 
-						0, SYSDATE, #{group_no }, #{order_no }, #{depth }, #{fileName } )
+						0, SYSDATE, #{group_no }, #{order_no }, #{depth }, #{fileName }, #{fileOriginalName } )
 		]]>
 	</insert>
 	
 	<select id="getView" parameterType="long" resultType="BoardVo">
 		<![CDATA[
-			select no, title, content, member_no, group_no, order_no, depth, fileName 
+			select no, title, content, member_no, group_no, order_no, depth, fileName, fileOriginalName 
 			from board where no=#{no }
 		]]>
 	</select>

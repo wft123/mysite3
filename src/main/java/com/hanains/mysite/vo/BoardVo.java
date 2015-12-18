@@ -12,6 +12,7 @@ public class BoardVo {
 		private long order_no;
 		private long depth;
 		private String fileName;
+		private String fileOriginalName;
 		
 		public BoardVo(){}
 
@@ -103,11 +104,20 @@ public class BoardVo {
 			this.fileName = fileName;
 		}
 
+		public String getFileOriginalName() {
+			return fileOriginalName;
+		}
+
+		public void setFileOriginalName(String fileOriginalName) {
+			this.fileOriginalName = fileOriginalName;
+		}
+
 		@Override
 		public String toString() {
 			return "BoardVo [no=" + no + ", title=" + title + ", content=" + content + ", member_no=" + member_no
 					+ ", view_cnt=" + view_cnt + ", reg_date=" + reg_date + ", member_name=" + member_name
 					+ ", group_no=" + group_no + ", order_no=" + order_no + ", depth=" + depth + ", fileName="
-					+ fileName + "]";
+					+ fileName + ", fileOriginalName=" + fileOriginalName + "]";
 		}
+		
 }

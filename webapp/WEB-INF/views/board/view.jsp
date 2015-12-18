@@ -34,7 +34,8 @@
 					<tr>
 							<td class="label">파일</td>
 							<td>
-								<img src="${pageContext.request.contextPath }/upload-files/${vo.fileName}" width=150px>
+								<!-- <img src="${pageContext.request.contextPath }/upload-files/${vo.fileName}" width=150px> -->
+								<a href="${pageContext.request.contextPath }${vo.fileName}">${vo.fileOriginalName }</a>
 							</td> 
 						</tr>
 				</table>
