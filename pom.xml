@@ -9,13 +9,22 @@
 
 	<properties>
 		<org.springframework-version>4.0.3.RELEASE</org.springframework-version>
+		<jcloverslf4j.version>1.7.6</jcloverslf4j.version>		
+		<logback.version>1.1.1</logback.version>
 	</properties>
 
 	<dependencies>
+		<!-- Spring core -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${org.springframework-version}</version>
+			<exclusions>
+			   <exclusion>
+				  <groupId>commons-logging</groupId>
+				  <artifactId>commons-logging</artifactId>
+			   </exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -63,6 +72,27 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.1.1</version>
 		</dependency>
+		
+		<!-- spring aspect -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		
+		<!-- Logback --> 
+		<dependency>                                    
+			<groupId>org.slf4j</groupId>                
+			<artifactId>jcl-over-slf4j</artifactId>     
+			<version>${jcloverslf4j.version}</version>  
+		</dependency>
+		
+		<!-- slf4j 를 구현하고 있는 Logback 라이브러리이다. -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
 
 		<!-- common fileupload 파일업로드처리1 -->
 		<dependency>
@@ -80,6 +110,7 @@
 			<artifactId>commons-io</artifactId>
 			<version>1.4</version>
 		</dependency>
+		
 	</dependencies>
 
 	<repositories>
