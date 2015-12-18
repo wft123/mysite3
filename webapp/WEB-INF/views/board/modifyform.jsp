@@ -15,7 +15,7 @@
 		
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/modify">
+				<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/modify" enctype="multipart/form-data">
 					<input type="hidden" name="no" value="${vo.no }">
 					<table class="tbl-ex">
 						<tr>
@@ -31,6 +31,13 @@
 								<textarea id="content" name="content">${fn:replace(vo.content, newLineChar, '<br/>') }	</textarea>
 							</td>
 						</tr>
+						<tr>
+						<td class="label">파일</td>
+						<td>
+							<input type="file" name="file"  >
+							<a href="${pageContext.request.contextPath }${vo.fileName}">${vo.fileOriginalName }</a>
+						</td> 
+					</tr>
 					</table>
 					<div class="bottom">
 						<a href="${pageContext.request.contextPath}/board/">취소</a>

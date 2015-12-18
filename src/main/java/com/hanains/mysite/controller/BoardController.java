@@ -56,8 +56,8 @@ public class BoardController {
 	
 	@Auth
 	@RequestMapping("/modify")
-	public String modify(@ModelAttribute BoardVo vo){
-		service.modify(vo);
+	public String modify(@ModelAttribute BoardVo vo,@RequestParam( "file" ) MultipartFile file){
+		service.modify(vo,file);
 		return "redirect:/board/";
 	}
 

@@ -59,7 +59,12 @@ public class BoardService {
 		dao.delete(no);
 	}
 
-	public void modify(BoardVo vo) {
+	public void modify(BoardVo vo, MultipartFile file1) {
+		if(file1!=null){
+			String[] fileInfo = fileSave(file1);
+			vo.setFileOriginalName(fileInfo[0]);
+			vo.setFileName( fileInfo[1]);
+		}
 		dao.modify(vo);
 	}
 
