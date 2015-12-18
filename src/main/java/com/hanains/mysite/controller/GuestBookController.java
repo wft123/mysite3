@@ -28,6 +28,7 @@ public class GuestBookController {
 	
 	@RequestMapping("/add")
 	public String add(@ModelAttribute GuestBookVo vo){
+		if(vo.getMessage().trim().length()==0 || vo.getName().trim().length()==0 || vo.getPassword().trim().length()==0) return "redirect:/guestbook/";
 		service.add(vo);
 		return "redirect:/guestbook/";
 	}

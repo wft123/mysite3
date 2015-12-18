@@ -43,6 +43,7 @@ public class UserController {
 	
 	@RequestMapping("/join")
 	public String join(@ModelAttribute UserVo vo){
+		if(vo.getEmail().trim().length()==0 || vo.getName().trim().length()==0 || vo.getPassword().trim().length()==0) return "/user/joinform";
 		userService.join(vo);
 		return "redirect:/user/joinsuccess";
 	}
