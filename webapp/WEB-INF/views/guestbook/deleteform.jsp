@@ -6,6 +6,11 @@
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <link href="${pageContext.request.contextPath}/assets/css/guestbook.css" rel="stylesheet" type="text/css">
+<c:if test="${param.result=='fail' }">
+	<script>
+		alert('모든 정보를 입력하세요.');
+	</script>
+</c:if>
 </head>
 <body>
 	<div id="container">

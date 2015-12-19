@@ -48,6 +48,11 @@ $(function(){
 	});
 });
 </script>
+<c:if test="${param.result=='fail' }">
+	<script>
+		alert('모든 정보를 입력하세요.');
+	</script>
+</c:if>
 </head>
 <body>
 	<div id="container">

@@ -60,10 +60,13 @@ public class BoardService {
 	}
 
 	public void modify(BoardVo vo, MultipartFile file1) {
-		if(file1!=null){
+		if(!file1.isEmpty()){
 			String[] fileInfo = fileSave(file1);
 			vo.setFileOriginalName(fileInfo[0]);
 			vo.setFileName( fileInfo[1]);
+		}else{
+			vo.setFileOriginalName("");
+			vo.setFileName( "");
 		}
 		dao.modify(vo);
 	}
@@ -78,9 +81,14 @@ public class BoardService {
 				vo.setOrder_no(dao.getMaxOrder(vo.getGroup_no()) + 1);
 			vo.setDepth(vo.getDepth() + 1);
 		}
-		String[] fileInfo = fileSave(file1);
-		vo.setFileOriginalName(fileInfo[0]);
-		vo.setFileName( fileInfo[1]);
+		if(!file1.isEmpty()){
+			String[] fileInfo = fileSave(file1);
+			vo.setFileOriginalName(fileInfo[0]);
+			vo.setFileName( fileInfo[1]);
+		}else{
+			vo.setFileOriginalName("");
+			vo.setFileName( "");
+		}
 		dao.insert(vo);
 	}
 

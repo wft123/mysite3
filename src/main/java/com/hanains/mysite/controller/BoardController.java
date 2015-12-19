@@ -56,7 +56,12 @@ public class BoardController {
 	
 	@Auth
 	@RequestMapping("/modify")
-	public String modify(@ModelAttribute BoardVo vo,@RequestParam( "file" ) MultipartFile file){
+	public String modify(Model model, @ModelAttribute BoardVo vo,@RequestParam( "file" ) MultipartFile file){
+		if(vo.getTitle().trim().length()==0){
+			model.addAttribute("vo", service.getView(vo.getNo()));
+			model.addAttribute("result", "fail");
+			return "/board/modifyform";
+		}
 		service.modify(vo,file);
 		return "redirect:/board/";
 	}
@@ -71,6 +76,7 @@ public class BoardController {
 	@Auth
 	@RequestMapping("/write")
 	public String write(@ModelAttribute BoardVo vo,@RequestParam( "file" ) MultipartFile file){
+		if(vo.getTitle().trim().length()==0) return "redirect:/board/writeform?result=fail";
 		service.write(vo,file);
 		return "redirect:/board/";
 	}
